@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Rom4ik_212</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @font-face {
+      font-family: 'Minecraft';
+      src: url('fonts/Minecraft.ttf') format('truetype');
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #111;
+      color: white;
+    }
+
+    .navbar {
+      width: 100%;
+      background-color: #000;
+      color: white;
+      padding: 10px 30px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+      font-size: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-right: 20px;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      transition: opacity 0.3s;
+    }
+
+    .nav-link:hover {
+      opacity: 0.7;
+    }
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .icon-big {
+      width: 28px;
+      height: 28px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: bold;
+      font-family: 'Minecraft', sans-serif;
+    }
+
+    .lang-label {
+      font-size: 1rem;
+      color: #ccc;
+    }
+
+    .toggle {
+      position: relative;
+      width: 60px;
+      height: 24px;
+      background-color: #444;
+      border: 2px solid #666;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      box-shadow: inset 0 0 3px #000;
+      overflow: hidden;
+    }
+
+    .toggle::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: white;
+      top: 0;
+      left: 0;
+      transition: transform 0.3s;
+      box-shadow: 0 0 2px #000;
+      border-radius: 2px;
+    }
+
+    .toggle.active::before {
+      transform: translateX(36px);
+    }
+
+    header {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 40px;
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 60px;
+      max-width: 1200px;
+      width: 100%;
+      flex-wrap: wrap;
+      margin: 0 auto;
+      padding-left: 10px;
+    }
+
+    .hero-image img {
+      width: 500px;
+      max-width: 90vw;
+      border-radius: 24px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-text {
+      flex: 1;
+      max-width: 600px;
+      text-align: left;
+      position: relative;
+    }
+
+    .hero-text h1,
+    .hero-text p {
+      position: relative;
+    }
+
+    section {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      border-top: 1px solid #333;
+    }
+
+    .image {
+      flex: 1 1 300px;
+      max-width: 400px;
+      padding: 20px;
+    }
+
+    .image img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    .text {
+      flex: 1 1 300px;
+      max-width: 500px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .text h2, .text p {
+      position: relative;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px;
+      font-size: 0.9rem;
+      color: #888;
+      border-top: 1px solid #333;
+    }
+
+    .minecraft-font {
+      font-family: 'Minecraft', sans-serif;
+    }
+
+    .code-colored {
+      font-family: Consolas, monospace;
+      font-size: 1rem;
+      line-height: 1.6;
+      white-space: normal;
+      padding: 0;
+      margin: 0;
+    }
+
+    .token-blue    { color: #569cd6; }
+    .token-green   { color: #6a9955; }
+    .token-yellow  { color: #dcdcaa; }
+    .token-orange  { color: #ce9178; }
+    .token-cyan    { color: #4ec9b0; }
+    .token-purple  { color: #c586c0; }
+
+    [data-lang-block] {
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    [data-lang-block].lang-hidden {
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Навигация и переключатель языка -->
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="nav-links">
+        <a class="nav-link" href="https://youtube.com/@Rom4ik_212" target="_blank">
+          <img src="img/icons/youtube.svg" alt="YouTube" class="icon icon-big"> YouTube
+        </a>
+        <a class="nav-link" href="https://t.me/Rom4ik_212_official" target="_blank">
+          <img src="img/icons/telegram.svg" alt="Telegram" class="icon"> Telegram
+        </a>
+        <a class="nav-link" href="https://github.com/Rom4ik-12" target="_blank">
+          <img src="img/icons/github.svg" alt="GitHub" class="icon icon-big"> GitHub
+        </a>
+          <a class="nav-link" href="https://t.me/ChokoDonwload" target="_blank">
+          <img src="img/icons/Choko.png" alt="Choko" class="icon icon-big"> Choko
+        </a>
+      </div>
+      <div class="lang-switch">
+        <span class="lang-label">RU</span>
+        <div class="toggle" id="langToggle"></div>
+        <span class="lang-label">EN</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Контент -->
+  <header>
+    <div class="hero">
+      <div class="hero-image">
+        <img src="img/avatar.jpg" alt="Rom4ik_212">
+      </div>
+      <div class="hero-text">
+        <h1 data-lang-block="ru">Привет, я - Rom4ik_212</h1>
+        <h1 data-lang-block="en" class="lang-hidden">Hi, I'm Rom4ik_212</h1>
+        <p data-lang-block="ru">Разработчик телеграм ботов, майнкрафтер и ютубер по майнкрафту</p>
+        <p data-lang-block="en" class="lang-hidden">Telegram bot developer, Minecrafter and Minecraft YouTuber</p>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="image">
+      <img src="img/code.png" alt="Разработка">
+    </div>
+    <div class="text">
+      <h2 data-lang-block="ru">Разработка</h2>
+      <h2 data-lang-block="en" class="lang-hidden">Development</h2>
+      <div class="code-colored" data-lang-block="ru">
+        Я пишу <span class="token-blue">ботов</span> на <span class="token-cyan">Python</span>,<br>
+        с помощью <span class="token-purple">aiogram</span> и <span class="token-purple">pyTelegramBotAPI</span>.<br>
+        Делаю <span class="token-blue">плагины</span> для <span class="token-cyan">ExtraGram</span>.<br>
+        Создаю <span class="token-blue">игры</span> на движку <span class="token-purple">Unity</span>.<br>
+        Иногда пробую <span class="token-orange">что-то новое</span>.
+      </div>
+      <div class="code-colored lang-hidden" data-lang-block="en">
+        I write <span class="token-blue">bots</span> in <span class="token-cyan">Python</span>,<br>
+        using <span class="token-purple">aiogram</span> and <span class="token-purple">pyTelegramBotAPI</span>.<br>
+        I make <span class="token-blue">plugins</span> for <span class="token-cyan">ExtraGram</span>.<br>
+        Sometimes I try <span class="token-orange">something new</span>.
+      </div>
+    </div>
+  </section>
+  
+  <section>
+    <div class="image">
+      <img src="img/youtube.jpg" alt="YouTube">
+    </div>
+    <div class="text">
+      <h2 data-lang-block="ru">YouTube</h2>
+      <h2 data-lang-block="en" class="lang-hidden">YouTube</h2>
+      <p data-lang-block="ru">Я делаю видео на YouTube — выживание, разбираю разные темы и иногда челленжи.</p>
+      <p data-lang-block="en" class="lang-hidden">I make YouTube videos - about survival, exploring different topics, and sometimes challenges.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="image">
+      <img src="img/minecraft.png" alt="Minecraft">
+    </div>
+    <div class="text minecraft-font">
+      <h2 data-lang-block="ru">Minecraft</h2>
+      <h2 data-lang-block="en" class="lang-hidden">Minecraft</h2>
+      <p data-lang-block="ru">Играю на серверах и делаю свои)</p>
+      <p data-lang-block="en" class="lang-hidden">Играю на серверах и делаю свои)</p>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 Rom4ik_212
+  </footer>
+
+  <!-- Скрипт -->
+  <script>
+    
+    const toggle = document.getElementById('langToggle');
+    const blocks = document.querySelectorAll('[data-lang-block]');
+    let currentLang = 'ru';
+
+    function parseHtmlToTokens(html) {
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      const tokens = [];
+
+      function walk(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          [...node.textContent].forEach(c => tokens.push({ type: 'text', content: c }));
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          const tag = node.tagName.toLowerCase();
+          const className = node.className;
+          const children = [];
+          node.childNodes.forEach(child => {
+            children.push(...parseHtmlToTokens(child.outerHTML || child.textContent));
+          });
+          tokens.push({ type: 'tag', tag, className, children });
+        }
+      }
+
+      div.childNodes.forEach(walk);
+      return tokens;
+    }
+
+    function renderTokens(element, tokens, delay = 15) {
+      element.innerHTML = '';
+      let i = 0;
+
+      function renderNext() {
+        if (i >= tokens.length) return;
+        const token = tokens[i++];
+        if (token.type === 'text') {
+          element.innerHTML += token.content;
+          setTimeout(renderNext, delay);
+        } else if (token.type === 'tag') {
+          const span = document.createElement(token.tag);
+          if (token.className) span.className = token.className;
+          element.appendChild(span);
+          let j = 0;
+          function renderChild() {
+            if (j >= token.children.length) return renderNext();
+            const child = token.children[j++];
+            if (child.type === 'text') {
+              span.innerHTML += child.content;
+              setTimeout(renderChild, delay);
+            }
+          }
+          renderChild();
+        }
+      }
+
+      renderNext();
+    }
+
+    function eraseText(el, speed = 10) {
+      return new Promise(resolve => {
+        let i = el.textContent.length;
+        const interval = setInterval(() => {
+          el.textContent = el.textContent.slice(0, --i);
+          if (i <= 0) {
+            clearInterval(interval);
+            el.innerHTML = '';
+            resolve();
+          }
+        }, speed);
+      });
+    }
+
+    async function updateLang(lang) {
+      if (lang === currentLang) return;
+
+      const toHide = Array.from(blocks).filter(b => b.dataset.langBlock === currentLang);
+      const toShow = Array.from(blocks).filter(b => b.dataset.langBlock === lang);
+
+      toHide.forEach(oldBlock => {
+        const newBlock = Array.from(toShow).find(b =>
+          b.tagName === oldBlock.tagName &&
+          b.parentElement === oldBlock.parentElement
+        );
+
+        oldBlock.setAttribute('data-full-html', oldBlock.innerHTML);
+        eraseText(oldBlock).then(() => {
+          oldBlock.classList.add('lang-hidden');
+          oldBlock.style.display = 'none';
+
+          if (newBlock) {
+            const html = newBlock.getAttribute('data-full-html') || newBlock.innerHTML;
+            newBlock.setAttribute('data-full-html', html);
+            newBlock.style.display = 'block';
+            newBlock.classList.remove('lang-hidden');
+            renderTokens(newBlock, parseHtmlToTokens(html), 15);
+          }
+        });
+      });
+
+      toggle.classList.toggle('active', lang === 'en');
+      currentLang = lang;
+    }
+
+    toggle.addEventListener('click', () => {
+      updateLang(currentLang === 'ru' ? 'en' : 'ru');
+    });
+
+    updateLang('ru');
+  </script>
+  <script src="https://cdn.counter.dev/script.js" data-id="f88a30a5-42d2-4cb2-a3e9-2e12f658001f" data-utcoffset="3"></script>
+</body>
+</html>
